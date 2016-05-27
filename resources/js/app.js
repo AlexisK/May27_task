@@ -20,16 +20,29 @@ function declareInstances() {
 function mainScenario() {
     parking.restoreState();
     
-    parking.register(dummy_Sedan.copy());
-    parking.register(dummy_Sedan.copy());
-    parking.register(dummy_Disabled.copy());
-    parking.register(dummy_Truck.copy());
+    // parking.register(dummy_Sedan.copy());
+    // parking.register(dummy_Sedan.copy());
+    // parking.register(dummy_Disabled.copy());
+    // parking.register(dummy_Truck.copy());
     
-    for ( var i = 0; i < 6; i++ ) { parking.register(dummy_Disabled.copy()); }
+    // for ( var i = 0; i < 6; i++ ) { parking.register(dummy_Disabled.copy()); }
     
     parking.yieldState();
 }
 
+function fixtureFillScenario(limit) {
+    limit = limit || 30;
+    
+    var tag_keys = Object.keys(TAG);
+    
+    for ( var i = 0; i < limit; i++ ) {
+        var tag = TAG[tag_keys[parseInt(Math.random()*tag_keys.length)]];
+        parking.register(new Vehicle([tag]));
+    }
+}
+
 // Start
 declareInstances();
+fixtureFillScenario();
 mainScenario();
+
