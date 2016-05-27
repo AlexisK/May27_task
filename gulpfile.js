@@ -22,7 +22,7 @@ gulp.task('build_css', function(done) {
 
 gulp.task('build_js', function(done) {
     
-    gulp.src('./resources/js/**/*')
+    gulp.src(['./resources/js/storage.js', './resources/js/models/**/*','./resources/js/app.js'])
     .pipe(concat('compiled.js'))
     .pipe(uglify())
     .pipe(gulp.dest('./build'));
