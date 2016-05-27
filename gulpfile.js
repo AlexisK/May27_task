@@ -10,9 +10,9 @@ var uglify = require('gulp-uglify');
 
 gulp.task('build_css', function(done) {
     
-    gulp.src('./resources/css/**/*')
-    .pipe(less())
+    gulp.src(['./resources/css/config.less','./resources/css/**/*'])
     .pipe(concat('compiled.css'))
+    .pipe(less())
     .pipe(csso())
     .pipe(gulp.dest('./build'));
     

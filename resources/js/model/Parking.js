@@ -101,6 +101,20 @@ function Parking(name) {
         }
     }
     
+    self._createDom = function() {
+        self.dom = cr('div','parking');
+        
+        for ( k in self.slot_by_type ) {
+            self.dom.appendChild(self.slot_by_type[k].getDom());
+        }
+        
+        return self.dom;
+    }
+    
+    self.getDom = function() {
+        return self.dom || self._createDom();
+    }
+    
     self.init();
 }
 

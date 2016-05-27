@@ -8,6 +8,8 @@ function SlotSet(data) {
         self.max = data.max || 0;
         self.tagqueue = data.tagqueue || [];
         self.vehicles = new Array(self.max);
+        self.vehicles_dom = new Array(self.max);
+        self._createDom();
     }
     
     self.addVehicle = function(vehicle, pos) {
@@ -26,6 +28,8 @@ function SlotSet(data) {
         }
         
         vehicle.addondelete(vehicle._delete.slot);
+        
+        self.vehicles_dom[pos].className = 'vehicle '+vehicle.taglist.join(' ');
     }
     
     self.removeVehicle = function(vehicle) {
@@ -35,6 +39,8 @@ function SlotSet(data) {
             self.has -= 1;
             
             vehicle.removeondelete(vehicle._delete.slot);
+            
+            self.vehicles_dom[pos].className = 'vehicle hidden';
         }
     }
     
@@ -45,7 +51,7 @@ function SlotSet(data) {
     
     self.yieldState = function() {
         console.log(['Currently filled with ',self.has,'/',self.max,' vehicles: {'].join(''));
-        for ( var i = 0; i < self.vehicles.length; i++ ) {
+        for ( var i = 0; i < self.max; i++ ) {
             var vehicle = self.vehicles[i];
             if ( vehicle == undefined ) {
                 console.log('\t---------');
@@ -61,12 +67,27 @@ function SlotSet(data) {
     }
     
     self.clear = function() {
-        for ( var i = 0; i < self.vehicles.length; i++ ) {
+        for ( var i = 0; i < self.max; i++ ) {
             var vehicle = self.vehicles[i];
             vehicle && vehicle.delete();
         }
         self.vehicles = new Array(self.max);
         self.has = 0;
+    }
+    
+    
+    self._createDom = function() {
+        self.dom = cr('div','slot-set');
+        
+        for ( var i = 0; i < self.max; i++ ) {
+            self.vehicles_dom[i] = cr('div','vehicle hidden', cr('div', 'slot', self.dom) );
+        }
+        
+        return self.dom;
+    }
+    
+    self.getDom = function() {
+        return self.dom;
     }
     
     self.init();

@@ -23,8 +23,10 @@ function mainScenario() {
     Vehicle.loadState();
     Parking.loadState();
     
-    
     parking.yieldState();
+    
+    var view = parking.getDom();
+    document.body.appendChild(view);
 }
 
 function fixtureFillScenario(limit) {

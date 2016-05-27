@@ -1,0 +1,32 @@
+
+.parking {
+    background-color:@grey_dark;
+}
+
+.slot-set {
+    margin-left:@slot_w;
+}
+
+.slot {
+    position: relative;
+    display: inline-block;
+    width:@slot_w; height:@slot_h;
+    margin-bottom:@slot_w;
+    
+    border: 0px solid @grey_light;
+    border-width: 1px 1px 0px 0px;
+}
+.slot:first-child { border-width: 1px 1px 0px 1px; }
+
+.vehicle {
+    width:@car_w; height:@car_h;
+    background-color:@grey;
+    border: 1px solid @grey_light;
+    border-radius: 10px;
+}
+
+.slot > .vehicle {
+    position: absolute;
+    top: 0px; right: 0px; bottom: 0px; left: 0px;
+    margin: auto;
+}
