@@ -4,5 +4,6 @@
 window.TAG = {};
 
 function Tag(name) {
+    this.name = name;
     TAG[name] = this;
 }

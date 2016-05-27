@@ -8,8 +8,8 @@ function declareInstances() {
     window.parking = new Parking();
     
     parking.addSlots('Trucks',10,[TAG.Truck,TAG.Disabled,TAG.Sedan]);
-    parking.addSlots('Disabled',5,[TAG.Sedan]);
-    parking.addSlots('Simple',15,[TAG.Disabled,TAG.Sedan]);
+    parking.addSlots('Disabled',5,[TAG.Disabled]);
+    parking.addSlots('Simple',15,[TAG.Sedan,TAG.Disabled]);
     
     window.dummy_Truck = new Vehicle([TAG.Truck]);
     window.dummy_Sedan = new Vehicle([TAG.Sedan]);
