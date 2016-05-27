@@ -34,7 +34,7 @@ function SlotSet(data) {
             if ( vehicle == undefined ) {
                 console.log('\t---------');
             } else {
-                console.log('\t'+vehicle.taglist.join(', '));
+                console.log(['\t',vehicle.id,' ',vehicle.taglist.join(', ')].join(''));
             }
         }
         console.log('}');

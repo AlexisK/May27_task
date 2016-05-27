@@ -48,11 +48,12 @@ function Parking() {
     
     self.register = function(vehicle) {
         var place = self._getSlotByVehicle(vehicle);
-        if ( !place ) { return false; }
+        if ( !place ) {
+            console.log('No place for ',vehicle);
+            return false;
+        }
         
         place.addVehicle(vehicle);
-        
-        console.log(place);
     }
     
     self.clear = function(index) {
