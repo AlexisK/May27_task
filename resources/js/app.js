@@ -23,13 +23,13 @@ function mainScenario() {
     Vehicle.restore();// global vehicle restoration
     parking.restoreState();// specific parking restoration
     
-    fixtureFillScenario();//- data restoration is not ready yet - so we use random generator for now
+    fixtureFillScenario(10);//- data restoration is not ready yet - so we use random generator for now
     
     parking.yieldState();
 }
 
 function fixtureFillScenario(limit) {
-    limit = limit || 30;
+    limit = limit || 0;
     
     var tag_keys = Object.keys(TAG);
     
