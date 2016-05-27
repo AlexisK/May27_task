@@ -8,7 +8,7 @@ function Parking() {
         self.slot_by_type = {};
     }
     
-    self.getSlotByTag = function(tag) {
+    self._getSlotByTag = function(tag) {
         
         var priorityFound = Infinity;// JavaScript can, why not?
         var result = null;
@@ -28,6 +28,16 @@ function Parking() {
         return result;
     }
     
+    self._getSlotByVehicle = function(vehicle) {
+        var place = null;
+        for ( var i = 0; i < vehicle.taglist.length; i++ ) {
+            var tag = vehicle.taglist[i];
+            place = self._getSlotByTag(tag);
+            if ( place ) { return place; }
+        }
+        return place;
+    }
+    
     self.addSlots = function(name, quantity, tagqueue) {
         self.slot_by_type[name] = new SlotSet({
             max: quantity,
@@ -37,7 +47,12 @@ function Parking() {
     }
     
     self.register = function(vehicle) {
+        var place = self._getSlotByVehicle(vehicle);
+        if ( !place ) { return false; }
         
+        place.addVehicle(vehicle);
+        
+        console.log(place);
     }
     
     self.clear = function(index) {
