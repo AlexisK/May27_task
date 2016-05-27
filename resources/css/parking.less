@@ -5,6 +5,12 @@
 
 .slot-set {
     margin-left:@slot_w;
+    
+    .slot-name {
+        padding: 2px 4px;
+        border-top: 1px dashed @grey_light;
+        color:@grey_light;
+    }
 }
 
 .slot {
@@ -13,20 +19,49 @@
     width:@slot_w; height:@slot_h;
     margin-bottom:@slot_w;
     
-    border: 0px solid @grey_light;
-    border-width: 1px 1px 0px 0px;
+    border: 1px solid @grey_light;
+    border-width: 1px 0px 0px 1px;
+    
+     > .vehicle {
+        position: absolute;
+        top: 0px; right: 0px; bottom: 0px; left: 0px;
+        margin: auto;
+    }
 }
-.slot:first-child { border-width: 1px 1px 0px 1px; }
 
 .vehicle {
+    position: relative;
     width:@car_w; height:@car_h;
-    background-color:@grey;
+    background-color:@car_col;
     border: 1px solid @grey_light;
     border-radius: 10px;
+    cursor: pointer;
+    
+    .label {
+        position: absolute;
+        top: 4px; left: 4px;
+        padding: 2px 4px;
+        font-size:@font_small;
+        white-space: nowrap;
+        background-color:@white;
+        color:@grey_dark;
+        opacity: 0.0;
+        transition: opacity .25s;
+        z-index: 10;
+    }
+    
+    &.Sedan {
+        width:@sedan_w;height:@sedan_h;
+        background-color:@sedan_col;
+    }
+    &.Truck {
+        width:@truck_w; height:@truck_h;
+        background-color:@truck_col;
+    }
 }
 
-.slot > .vehicle {
-    position: absolute;
-    top: 0px; right: 0px; bottom: 0px; left: 0px;
-    margin: auto;
+.vehicle:hover > .label {
+    opacity: 1.0;
 }
+
+

@@ -4,6 +4,7 @@ function SlotSet(data) {
     self.inherit(BaseModel);
     
     self.init = function() {
+        self.name = data.name;
         self.has = 0;
         self.max = data.max || 0;
         self.tagqueue = data.tagqueue || [];
@@ -29,7 +30,8 @@ function SlotSet(data) {
         
         vehicle.addondelete(vehicle._delete.slot);
         
-        self.vehicles_dom[pos].className = 'vehicle '+vehicle.taglist.join(' ');
+        self.vehicles_dom[pos].appendChild(vehicle.getDom());
+        self.fetchString();
     }
     
     self.removeVehicle = function(vehicle) {
@@ -40,7 +42,8 @@ function SlotSet(data) {
             
             vehicle.removeondelete(vehicle._delete.slot);
             
-            self.vehicles_dom[pos].className = 'vehicle hidden';
+            self.vehicles_dom[pos].textContent = '';
+            self.fetchString();
         }
     }
     
@@ -79,11 +82,18 @@ function SlotSet(data) {
     self._createDom = function() {
         self.dom = cr('div','slot-set');
         
+        self.textlabel = cr('div','slot-name', self.dom);
+        self.fetchString();
+        
         for ( var i = 0; i < self.max; i++ ) {
-            self.vehicles_dom[i] = cr('div','vehicle hidden', cr('div', 'slot', self.dom) );
+            self.vehicles_dom[i] = cr('div', 'slot', self.dom);
         }
         
         return self.dom;
+    }
+    
+    self.fetchString = function() {
+        self.textlabel.textContent = [self.name,' ',self.has,'/',self.max].join('');
     }
     
     self.getDom = function() {

@@ -45,6 +45,7 @@ function Parking(name) {
     
     self.addSlots = function(name, quantity, tagqueue) {
         self.slot_by_type[name] = new SlotSet({
+            name: name,
             max: quantity,
             tagqueue: tagqueue
         });

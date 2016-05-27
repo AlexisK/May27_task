@@ -4,8 +4,12 @@ function toLen(str, len) {
 }
 
 window.carIter = {
-    num: 41,
-    get: function() { return toLen((carIter.num+=1).toString(),4); }
+    get: function() {
+        var num = STORAGE.carId||41
+        num+=1;
+        STORAGE.carId = num;
+        return toLen(num.toString(),4);
+    }
 };
 
 
@@ -47,6 +51,20 @@ function Vehicle(taglist) {// id is optional, used to restore vehicles
         return {
             taglist: self.taglist.join(',')
         }
+    }
+    
+    self._createDom = function() {
+        var tagstr = self.taglist.join(' ');
+        self.dom = cr('div','vehicle '+tagstr);
+        
+        self.textlabel = cr('div', 'label', self.dom);
+        self.textlabel.textContent = [self.id, tagstr].join(' ');
+        
+        return self.dom;
+    }
+    
+    self.getDom = function() {
+        return self.dom || self._createDom();
     }
     
 }
