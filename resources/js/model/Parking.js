@@ -72,7 +72,10 @@ function Parking() {
     }
     
     self.yieldState = function() {
-        
+        for ( k in self.slot_by_type ) {
+            console.log(['\nState for ',k,' parking group'].join(''));
+            self.slot_by_type[k].yieldState();
+        }
     }
     
     self.init();

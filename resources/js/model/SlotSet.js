@@ -27,6 +27,19 @@ function SlotSet(data) {
         return self.tagqueue.indexOf(tag);
     }
     
+    self.yieldState = function() {
+        console.log(['Currently filled with ',self.has,'/',self.max,' vehicles: {'].join(''));
+        for ( var i = 0; i < self.vehicles.length; i++ ) {
+            var vehicle = self.vehicles[i];
+            if ( vehicle == undefined ) {
+                console.log('\t---------');
+            } else {
+                console.log('\t'+vehicle.taglist.join(', '));
+            }
+        }
+        console.log('}');
+    }
+    
     self.init();
 }
 

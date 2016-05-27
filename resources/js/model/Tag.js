@@ -7,3 +7,5 @@ function Tag(name) {
     this.name = name;
     TAG[name] = this;
 }
+
+Tag.prototype.toString = function() { return this.name; }
