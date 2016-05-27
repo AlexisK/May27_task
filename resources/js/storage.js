@@ -1,7 +1,7 @@
 
 window.STORAGE = {};
 
-function StateSave() {
+function SaveState() {
     localStorage.state = JSON.stringify(STORAGE);
 }
 
