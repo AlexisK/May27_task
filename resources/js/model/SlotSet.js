@@ -10,16 +10,32 @@ function SlotSet(data) {
         self.vehicles = new Array(self.max);
     }
     
-    self.addVehicle = function(vehicle) {
+    self.addVehicle = function(vehicle, pos) {
         if ( self.has == self.max ) { return false; }
-        var pos = 0;
-        for ( ;self.vehicles[pos] != undefined; pos++ );
+        
+        if ( !def(pos) ) {
+            pos = 0;
+            for ( ;self.vehicles[pos] != undefined; pos++ );
+        }
+        
         self.vehicles[pos] = vehicle;
         self.has += 1;
+        
+        vehicle._delete.slot = function() {
+            self.removeVehicle(vehicle);
+        }
+        
+        vehicle.addondelete(vehicle._delete.slot);
     }
     
     self.removeVehicle = function(vehicle) {
-        
+        var pos = self.vehicles.indexOf(vehicle);
+        if ( pos != -1 ) {
+            delete self.vehicles[pos];
+            self.has -= 1;
+            
+            vehicle.removeondelete(vehicle._delete.slot);
+        }
     }
     
     self.getPriorityFor = function(tag) {
@@ -38,6 +54,19 @@ function SlotSet(data) {
             }
         }
         console.log('}');
+    }
+    
+    self.getSerializedList = function() {
+        return self.vehicles.join(',');
+    }
+    
+    self.clear = function() {
+        for ( var i = 0; i < self.vehicles.length; i++ ) {
+            var vehicle = self.vehicles[i];
+            vehicle && vehicle.delete();
+        }
+        self.vehicles = new Array(self.max);
+        self.has = 0;
     }
     
     self.init();

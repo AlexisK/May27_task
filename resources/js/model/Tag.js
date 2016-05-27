@@ -9,3 +9,7 @@ function Tag(name) {
 }
 
 Tag.prototype.toString = function() { return this.name; }
+
+Tag.fetch = function(name) {
+    return TAG[name] || new Tag(name);
+}

@@ -1,5 +1,5 @@
 
-function Parking() {
+function Parking(name) {
     var self = getSelf(this);
     self.inherit(BaseModel);
     
@@ -54,22 +54,44 @@ function Parking() {
         }
         
         place.addVehicle(vehicle);
+        self.saveState();
     }
     
     self.clear = function(index) {
-        
-    }
-    
-    self.clearAll = function() {
-        
+        for ( var key in self.slot_by_type ) {
+            var slotSet = self.slot_by_type[key];
+            slotSet.clear();
+        }
+        self.saveState();
     }
     
     self.restoreState = function() {
-        
+        if ( STORAGE.parking && STORAGE.parking[name] ) {
+            var data = STORAGE.parking[name];
+            
+            for ( var k in data ) {
+                var vehicles = data[k].split(',');
+                for ( var i = 0; i < vehicles.length; i++ ) {
+                    var vehicle = VEHICLE[vehicles[i]];
+                    if ( vehicle ) {
+                        self.slot_by_type[k].addVehicle(vehicle, i);
+                    }
+                }
+                
+            }
+        }
     }
     
     self.saveState = function() {
+        var saveObj = {};
         
+        for ( var key in self.slot_by_type ) {
+            saveObj[key] = self.slot_by_type[key].getSerializedList();
+        }
+        
+        STORAGE.parking = STORAGE.parking || {};
+        STORAGE.parking[name] = saveObj;
+        SaveState();
     }
     
     self.yieldState = function() {

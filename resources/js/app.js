@@ -5,7 +5,7 @@ function declareInstances() {
         new Tag(name);
     });
     
-    window.parking = new Parking();
+    window.parking = new Parking('main');
     
     parking.addSlots('Trucks',10,[TAG.Truck, null ,TAG.Disabled,TAG.Sedan]);// These are priority queues, null is to put anything other than trucks futher
     parking.addSlots('Disabled',5,[TAG.Disabled]);
@@ -23,7 +23,6 @@ function mainScenario() {
     Vehicle.restore();// global vehicle restoration
     parking.restoreState();// specific parking restoration
     
-    fixtureFillScenario(10);//- data restoration is not ready yet - so we use random generator for now
     
     parking.yieldState();
 }
