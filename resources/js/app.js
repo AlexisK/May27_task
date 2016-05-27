@@ -1,4 +1,6 @@
 
+window.db_version = 1;
+
 function declareInstances() {
     
     'Truck,Sedan,Disabled'.split(',').map(function(name) {
@@ -18,6 +20,12 @@ function declareInstances() {
 }
 
 function mainScenario() {
+    
+    var ver = localStorage.db_version||0;
+    localStorage.db_version = window.db_version;
+    if ( ver != window.db_version ) { migrate(); }
+    
+    
     window.loadState();// only data, no model instances here
     declareInstances();
     Vehicle.loadState();
