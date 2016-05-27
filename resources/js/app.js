@@ -18,6 +18,8 @@ function declareInstances() {
 }
 
 function mainScenario() {
+    parking.restoreState();
+    
     parking.yieldState();
     
     parking.register(dummy_Sedan.copy());
