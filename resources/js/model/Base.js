@@ -39,4 +39,62 @@ function BaseModel() {
         self._delete.todo = [];
     }
     
+    self._deleteworker = function() {
+        if ( self.model && self.id ) {
+            var globRef = self.model.toUpperCase();
+            if ( window[globRef] && window[globRef][self.id] ) {
+                delete window[globRef][self.id];
+            }
+            if ( STORAGE[self.model] && STORAGE[self.model][self.id] ) {
+                delete STORAGE[self.model][self.id];
+            }
+        }
+        self.doondelete();
+    }
+    
+    self.delete = function() {
+        self._deleteworker();
+        window.saveState();
+    }
+    
+    
+    self._saveRepresintation = function() { return {}; }// rewritable functions
+    self._loadRepresintation = function(data) {}
+    
+    self.saveState = function() {
+        if ( self.model && self.id ) {
+            STORAGE[self.model] = STORAGE[self.model] || {};
+            STORAGE[self.model][self.id] = self._saveRepresintation();
+        }
+        window.saveState();
+    }
+    self.loadState = function() {
+        if ( self.model && self.id && STORAGE[self.model] && STORAGE[self.model][self.id] ) {
+            self._loadRepresintation(STORAGE[self.model][self.id]);
+        }
+    }
+    
 }
+
+BaseModel.ModelSaveStateMechanics = function(globalRef) {
+    return function() {
+        for ( var k in globalRef ) {
+            globalRef[k].saveState();
+        }
+    }
+}
+
+BaseModel.ModelLoadStateMechanics = function(globalRef) {
+    return function() {
+        for ( var k in globalRef ) {
+            globalRef[k].loadState();
+        }
+    }
+}
+
+
+
+
+
+
+

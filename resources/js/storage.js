@@ -1,11 +1,11 @@
 
 window.STORAGE = {};
 
-function SaveState() {
+function saveState() {
     localStorage.state = JSON.stringify(STORAGE);
 }
 
-function LoadState() {
+function loadState() {
     try {
         STORAGE = JSON.parse(localStorage.state);
     } catch(err) {}

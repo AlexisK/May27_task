@@ -24,7 +24,7 @@ gulp.task('build_js', function(done) {
     
     gulp.src(['./resources/js/wrap.js', './resources/js/storage.js', './resources/js/model/**/*','./resources/js/app.js'])
     .pipe(concat('compiled.js'))
-    .pipe(uglify())
+    // .pipe(uglify())
     .pipe(gulp.dest('./build'));
     
     done();

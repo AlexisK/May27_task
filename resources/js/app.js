@@ -11,17 +11,17 @@ function declareInstances() {
     parking.addSlots('Disabled',5,[TAG.Disabled]);
     parking.addSlots('Simple',15,[TAG.Sedan,TAG.Disabled]);
     
-    window.dummy_Truck = new Vehicle([TAG.Truck],'DV-truck');// Vehicle can have any number of tags, so we can have "Disabled Truck" :)
-    window.dummy_Sedan = new Vehicle([TAG.Sedan],'DV-sedan');
-    window.dummy_Disabled = new Vehicle([TAG.Disabled],'DV-disabled');
+    window.dummy_Truck = new Vehicle([TAG.Truck]).init('DV-truck');// Vehicle can have any number of tags, so we can have "Disabled Truck" :)
+    window.dummy_Sedan = new Vehicle([TAG.Sedan]).init('DV-sedan');
+    window.dummy_Disabled = new Vehicle([TAG.Disabled]).init('DV-disabled');
     
 }
 
 function mainScenario() {
-    LoadState();// only data, no model instances here
+    window.loadState();// only data, no model instances here
     declareInstances();
-    Vehicle.restore();// global vehicle restoration
-    parking.restoreState();// specific parking restoration
+    Vehicle.loadState();
+    Parking.loadState();
     
     
     parking.yieldState();
@@ -34,9 +34,15 @@ function fixtureFillScenario(limit) {
     
     for ( var i = 0; i < limit; i++ ) {
         var tag = TAG[tag_keys[parseInt(Math.random()*tag_keys.length)]];
-        parking.register(new Vehicle([tag]));
+        parking.register(new Vehicle([tag]).init());
     }
 }
+
+function migrate() {// Quite simple
+    delete localStorage.state;
+    window.location.reload();
+}
+
 
 // Start
 mainScenario();

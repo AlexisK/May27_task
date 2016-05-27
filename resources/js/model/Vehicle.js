@@ -12,16 +12,19 @@ window.carIter = {
 window.VEHICLE = {};
 
 
-function Vehicle(taglist, id) {// id is optional, used to restore vehicles
+function Vehicle(taglist) {// id is optional, used to restore vehicles
     var self = getSelf(this);
     self.inherit(BaseModel);
+    self.model = 'Vehicle';
     
-    self.init = function() {
+    self.init = function(id) {
         
         self.id = id || 'VH-'+carIter.get();
         self.taglist = self._normalizeTags(taglist);
         VEHICLE[self.id] = self;
-        self.save();
+        self.saveState();
+        
+        return self;
     }
     
     self._normalizeTags = function(taglist) {
@@ -37,33 +40,25 @@ function Vehicle(taglist, id) {// id is optional, used to restore vehicles
     }
     
     self.copy = function() {
-        return new Vehicle(taglist.slice());
+        return new Vehicle(taglist.slice()).init();
     }
     
-    self.save = function() {
-        STORAGE.Vehicle = STORAGE.Vehicle || {};
-        STORAGE.Vehicle[self.id] = {
+    self._saveRepresintation = function() {
+        return {
             taglist: self.taglist.join(',')
         }
-        SaveState();
     }
     
-    self.delete = function() {
-        delete VEHICLE[self.id];
-        delete STORAGE.Vehicle[self.id];
-        self.doondelete();
-        SaveState();
-    }
-    
-    self.init();
 }
 
 Vehicle.prototype.toString = function() {
     return this.id;
 }
 
-Vehicle.restore = function() {
+Vehicle.saveState = BaseModel.ModelSaveStateMechanics(VEHICLE);
+
+Vehicle.loadState = function() {
     for ( var k in STORAGE.Vehicle ) {
-        new Vehicle(STORAGE.Vehicle[k].taglist, k);
+        new Vehicle(STORAGE.Vehicle[k].taglist).init(k);
     }
 }
