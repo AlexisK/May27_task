@@ -61,7 +61,7 @@ var Parking = (function(){
         return true;
     }
     
-    function clear(index) {
+    function clear() {
         for ( var key in this.slot_by_type ) {
             var slotSet = this.slot_by_type[key];
             slotSet.clear();
