@@ -1,25 +1,22 @@
 
 window.PARKING = {};
 
-function Parking(name) {
-    var self = getSelf(this);
-    self.inherit(BaseModel);
-    self.model = 'Parking';
+var Parking = (function(){
     
-    self.init = function() {
-        self.id = name;
-        self.priority_by_tag = {};
-        self.slot_by_type = {};
-        PARKING[name] = self;
+    function init(name) {
+        this.id = name;
+        this.priority_by_tag = {};
+        this.slot_by_type = {};
+        PARKING[name] = this;
     }
     
-    self._getSlotByTag = function(tag) {
+    function _getSlotByTag(tag) {
         
         var priorityFound = Infinity;// JavaScript can, why not?
         var result = null;
         
-        for ( var key in self.slot_by_type ) {
-            var slotSet = self.slot_by_type[key];
+        for ( var key in this.slot_by_type ) {
+            var slotSet = this.slot_by_type[key];
             var prio = slotSet.getPriorityFor(tag);
             if ( prio != -1 ) {
                 if ( prio == 0 ) { return slotSet; }
@@ -33,18 +30,18 @@ function Parking(name) {
         return result;
     }
     
-    self._getSlotByVehicle = function(vehicle) {
+    function _getSlotByVehicle(vehicle) {
         var place = null;
         for ( var i = 0; i < vehicle.taglist.length; i++ ) {
             var tag = vehicle.taglist[i];
-            place = self._getSlotByTag(tag);
+            place = this._getSlotByTag(tag);
             if ( place ) { return place; }
         }
         return place;
     }
     
-    self.addSlots = function(name, quantity, tagqueue) {
-        self.slot_by_type[name] = new SlotSet({
+    function addSlots(name, quantity, tagqueue) {
+        this.slot_by_type[name] = new SlotSet({
             name: name,
             max: quantity,
             tagqueue: tagqueue
@@ -52,72 +49,91 @@ function Parking(name) {
         
     }
     
-    self.register = function(vehicle) {
-        var place = self._getSlotByVehicle(vehicle);
+    function register(vehicle) {
+        var place = this._getSlotByVehicle(vehicle);
         if ( !place ) {
             console.log(locale.no_place_for,vehicle);
             return false;
         }
         
         place.addVehicle(vehicle);
-        self.saveState();
+        this.saveState();
     }
     
-    self.clear = function(index) {
-        for ( var key in self.slot_by_type ) {
-            var slotSet = self.slot_by_type[key];
+    function clear(index) {
+        for ( var key in this.slot_by_type ) {
+            var slotSet = this.slot_by_type[key];
             slotSet.clear();
         }
-        self.saveState();
+        this.saveState();
     }
     
-    self._saveRepresintation = function() {
+    function _saveRepresintation() {
         var saveObj = {};
         
-        for ( var key in self.slot_by_type ) {
-            saveObj[key] = self.slot_by_type[key].getSerializedList();
+        for ( var key in this.slot_by_type ) {
+            saveObj[key] = this.slot_by_type[key].getSerializedList();
         }
         
         return saveObj;
     }
     
-    self._loadRepresintation = function(data) {
+    function _loadRepresintation(data) {
         
         for ( var k in data ) {
             var vehicles = data[k].split(',');
             for ( var i = 0; i < vehicles.length; i++ ) {
                 var vehicle = VEHICLE[vehicles[i]];
-                if ( vehicle && self.slot_by_type[k] ) {
-                    self.slot_by_type[k].addVehicle(vehicle, i);
+                if ( vehicle && this.slot_by_type[k] ) {
+                    this.slot_by_type[k].addVehicle(vehicle, i);
                 }
             }
             
         }
     }
     
-    self.yieldState = function() {
-        for ( k in self.slot_by_type ) {
+    function yieldState() {
+        for ( k in this.slot_by_type ) {
             console.log(['\n',locale.state_parking_group[0],' ',k,' ',locale.state_parking_group[1]].join(''));
-            self.slot_by_type[k].yieldState();
+            this.slot_by_type[k].yieldState();
         }
     }
     
-    self._createDom = function() {
-        self.dom = cr('div','parking');
+    function _createDom() {
+        this.dom = cr('div','parking');
         
-        for ( k in self.slot_by_type ) {
-            self.dom.appendChild(self.slot_by_type[k].getDom());
+        for ( k in this.slot_by_type ) {
+            this.dom.appendChild(this.slot_by_type[k].getDom());
         }
         
-        return self.dom;
+        return this.dom;
     }
     
-    self.getDom = function() {
-        return self.dom || self._createDom();
+    function getDom() {
+        return this.dom || this._createDom();
     }
     
-    self.init();
-}
+    return function(name) {
+        var self = getSelf(this);
+        self.inherit(BaseModel);
+        self.model = 'Parking';
+        
+        self.init = init;
+        self._getSlotByTag = _getSlotByTag;
+        self._getSlotByVehicle = _getSlotByVehicle;
+        self.addSlots = addSlots;
+        self.register = register;
+        self.clear = clear;
+        self._saveRepresintation = _saveRepresintation;
+        self._loadRepresintation = _loadRepresintation;
+        self.yieldState = yieldState;
+        self._createDom = _createDom;
+        self.getDom = getDom;
+        
+        self.init(name);
+    };
+    
+})();
 
 Parking.saveState = BaseModel.ModelSaveStateMechanics(PARKING);
 Parking.loadState = BaseModel.ModelLoadStateMechanics(PARKING);

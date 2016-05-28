@@ -2,7 +2,7 @@
 window.config = {
     locale: "en-US",
     version: {
-        db: 1
+        db: 2
     },
     fixtureFill: {
         random: 5,
