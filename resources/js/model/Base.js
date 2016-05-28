@@ -14,67 +14,78 @@ function getSelf(ref) {
     return ref;
 }
 
-function BaseModel() {
-    var self = getSelf(this);
+var BaseModel = (function() {
     
-    self._delete = {
-        todo: [],
+    
+    function addondelete(func) {
+        this._delete.todo.push(func);
     }
     
-    self.addondelete = function(func) {
-        self._delete.todo.push(func);
-    }
-    
-    self.removeondelete = function(func) {
-        var pos = self._delete.todo.indexOf(func);
+    function removeondelete(func) {
+        var pos = this._delete.todo.indexOf(func);
         if ( pos != -1 ) {
-            self._delete.todo.splice(pos, 1);
+            this._delete.todo.splice(pos, 1);
         }
     }
     
-    self.doondelete = function() {
-        for ( var i = 0; i < self._delete.todo.length; i++ ) {
-            self._delete.todo[i]();
+    function doondelete() {
+        for ( var i = 0; i < this._delete.todo.length; i++ ) {
+            this._delete.todo[i]();
         }
-        self._delete.todo = [];
+        this._delete.todo = [];
     }
     
-    self._deleteworker = function() {
-        if ( self.model && self.id ) {
-            var globRef = self.model.toUpperCase();
-            if ( window[globRef] && window[globRef][self.id] ) {
-                delete window[globRef][self.id];
+    function _deleteworker() {
+        if ( this.model && this.id ) {
+            var globRef = this.model.toUpperCase();
+            if ( window[globRef] && window[globRef][this.id] ) {
+                delete window[globRef][this.id];
             }
-            if ( STORAGE[self.model] && STORAGE[self.model][self.id] ) {
-                delete STORAGE[self.model][self.id];
+            if ( STORAGE[this.model] && STORAGE[this.model][this.id] ) {
+                delete STORAGE[this.model][this.id];
             }
         }
-        self.doondelete();
+        this.doondelete();
     }
     
-    self.delete = function() {
-        self._deleteworker();
+    function del() {
+        this._deleteworker();
         window.saveState();
     }
     
     
-    self._saveRepresintation = function() { return {}; }// rewritable functions
-    self._loadRepresintation = function(data) {}
+    function _saveRepresintation() { return {}; }// rewritable functions
+    function _loadRepresintation(data) {}
     
-    self.saveState = function() {
-        if ( self.model && self.id ) {
-            STORAGE[self.model] = STORAGE[self.model] || {};
-            STORAGE[self.model][self.id] = self._saveRepresintation();
+    function saveState() {
+        if ( this.model && this.id ) {
+            STORAGE[this.model] = STORAGE[this.model] || {};
+            STORAGE[this.model][this.id] = this._saveRepresintation();
         }
         window.saveState();
     }
-    self.loadState = function() {
-        if ( self.model && self.id && STORAGE[self.model] && STORAGE[self.model][self.id] ) {
-            self._loadRepresintation(STORAGE[self.model][self.id]);
+    function loadState() {
+        if ( this.model && this.id && STORAGE[this.model] && STORAGE[this.model][this.id] ) {
+            this._loadRepresintation(STORAGE[this.model][this.id]);
         }
     }
     
-}
+    
+    return function() {
+        this._delete = {
+            todo: [],
+        }
+        this.addondelete = addondelete;
+        this.removeondelete = removeondelete;
+        this.doondelete = doondelete;
+        this._deleteworker = _deleteworker;
+        this.delete = del;
+        this._saveRepresintation = _saveRepresintation;
+        this._loadRepresintation = _loadRepresintation;
+        this.saveState = saveState;
+        this.loadState = loadState;
+    }
+})();
 
 BaseModel.ModelSaveStateMechanics = function(globalRef) {
     return function() {
