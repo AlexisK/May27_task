@@ -16,22 +16,18 @@ window.carIter = {
 window.VEHICLE = {};
 
 
-function Vehicle(taglist) {// id is optional, used to restore vehicles
-    var self = getSelf(this);
-    self.inherit(BaseModel);
-    self.model = 'Vehicle';
+var Vehicle = (function() {
     
-    self.init = function(id) {
+    function init(id) {
         
-        self.id = id || [config.vehicle_id_prefix,carIter.get()].join('-');
-        self.taglist = self._normalizeTags(taglist);
-        VEHICLE[self.id] = self;
-        self.saveState();
+        this.id = id || [config.vehicle_id_prefix,carIter.get()].join('-');
+        VEHICLE[this.id] = this;
+        this.saveState();
         
-        return self;
+        return this;
     }
     
-    self._normalizeTags = function(taglist) {
+    function _normalizeTags(taglist) {
         taglist = taglist || [];
         if ( typeof(taglist) == 'string' ) {
             var list = taglist.split(',');
@@ -43,31 +39,46 @@ function Vehicle(taglist) {// id is optional, used to restore vehicles
         return taglist;
     }
     
-    self.copy = function() {
+    function copy() {
         return new Vehicle(taglist.slice()).init();
     }
     
-    self._saveRepresintation = function() {
+    function _saveRepresintation() {
         return {
-            taglist: self.taglist.join(',')
+            taglist: this.taglist.join(',')
         }
     }
     
-    self._createDom = function() {
-        var tagstr = self.taglist.join(' ');
-        self.dom = cr('div','vehicle '+tagstr);
+    function _createDom() {
+        var tagstr = this.taglist.join(' ');
+        this.dom = cr('div','vehicle '+tagstr);
         
-        self.textlabel = cr('div', 'label', self.dom);
-        self.textlabel.textContent = [self.id, tagstr].join(' ');
+        this.textlabel = cr('div', 'label', this.dom);
+        this.textlabel.textContent = [this.id, tagstr].join(' ');
         
-        return self.dom;
+        return this.dom;
     }
     
-    self.getDom = function() {
-        return self.dom || self._createDom();
+    function getDom() {
+        return this.dom || this._createDom();
     }
     
-}
+    return function(taglist) {
+        var self = getSelf(this);
+        self.inherit(BaseModel);
+        self.model = 'Vehicle';
+        
+        self.init = init;
+        self._normalizeTags = _normalizeTags;
+        self.copy = copy;
+        self._saveRepresintation = _saveRepresintation;
+        self._createDom = _createDom;
+        self.getDom = getDom;
+        
+        self.taglist = self._normalizeTags(taglist);
+    }
+    
+})();
 
 Vehicle.prototype.toString = function() {
     return this.id;
