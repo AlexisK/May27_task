@@ -1,0 +1,10 @@
+
+window.config = {
+    version: {
+        db: 1
+    },
+    fixtureFill: {
+        random: 5,
+        interval: 150
+    }
+}

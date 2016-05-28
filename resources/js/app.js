@@ -1,6 +1,4 @@
 
-window.db_version = 1;
-
 function declareInstances() {
     
     'Truck,Sedan,Disabled'.split(',').map(function(name) {
@@ -20,11 +18,7 @@ function declareInstances() {
 }
 
 function mainScenario() {
-    
-    var ver = localStorage.db_version||0;
-    localStorage.db_version = window.db_version;
-    if ( ver != window.db_version ) { migrate(); }
-    
+    migration_check();
     
     window.loadState();// only data, no model instances here
     declareInstances();
@@ -37,47 +31,7 @@ function mainScenario() {
     document.body.appendChild(view);
 }
 
-function fixtureFillScenario(limit, tag_keys) {
-    limit = limit || 1;
-    
-    tag_keys = tag_keys || Object.keys(TAG);
-    
-    for ( var i = 0; i < limit; i++ ) {
-        var tag = TAG[tag_keys[parseInt(Math.random()*tag_keys.length)]];
-        parking.register(new Vehicle([tag]).init());
-    }
-}
-
-window.fcfRand = 4;
-function fixtureContiniousFillScenario(limit, tag_keys) {
-    // algorythm always trying to fit in its 'ideal' state - targetQuantity, so it will add or remove corresponding amout of vehicles
-    limit = limit || 1;
-    var targetQuantity = limit - fcfRand;
-    if ( targetQuantity <= 0 ) { console.log('Failed to run continious autofill - need limit of '+(fcfRand+1)+' at least'); return 0; }
-    parking.clear();
-    var quantity = 0;
-    
-    var worker = function() {
-        if ( quantity < targetQuantity ) {
-            fixtureFillScenario(targetQuantity-quantity+Math.floor(Math.random()*fcfRand), tag_keys);
-        } else {
-            var toDel = quantity-targetQuantity+Math.floor(Math.random()*fcfRand);
-            for ( var i = 0; i < toDel; i++ ) {
-                var vkeys = Object.keys(VEHICLE);
-                VEHICLE[vkeys[Math.floor(Math.random()*vkeys.length)]].delete();
-            }
-        }
-        quantity = Object.keys(VEHICLE).length;
-    }
-    setInterval(worker, 200);
-}
-
-function migrate() {// Quite simple
-    delete localStorage.state;
-    window.location.reload();
-}
-
 
 // Start
-mainScenario();
+loadJson('config.json', mainScenario);
 

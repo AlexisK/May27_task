@@ -22,7 +22,13 @@ gulp.task('build_css', function(done) {
 
 gulp.task('build_js', function(done) {
     
-    gulp.src(['./resources/js/wrap.js', './resources/js/storage.js', './resources/js/model/**/*','./resources/js/app.js'])
+    gulp.src([
+        './resources/js/wrap.js',
+        './resources/js/storage.js',
+        './resources/js/model/**/*',
+        './resources/js/service/**/*',
+        './resources/js/app.js'
+    ])
     .pipe(concat('compiled.js'))
     .pipe(uglify())
     .pipe(gulp.dest('./build'));

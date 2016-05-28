@@ -8,3 +8,10 @@ function cr(tag, cls, parent) {
     return elem;
 }
 
+function loadJson(path, todo) {
+    var newNode = cr('script');// loading json with 'script' tag in order to work directly from fs
+    newNode.onload = todo;
+    newNode.src = path;
+    document.body.appendChild(newNode);
+}
+
