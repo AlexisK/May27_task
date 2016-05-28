@@ -1,28 +1,28 @@
 
-function SlotSet(data) {
-    var self = getSelf(this);
-    self.inherit(BaseModel);
+var SlotSet = (function() {
     
-    self.init = function() {
-        self.name = data.name;
-        self.has = 0;
-        self.max = data.max || 0;
-        self.tagqueue = data.tagqueue || [];
-        self.vehicles = new Array(self.max);
-        self.vehicles_dom = new Array(self.max);
-        self._createDom();
+    function init(data) {
+        this.name = data.name;
+        this.has = 0;
+        this.max = data.max || 0;
+        this.tagqueue = data.tagqueue || [];
+        this.vehicles = new Array(this.max);
+        this.vehicles_dom = new Array(this.max);
+        this._createDom();
     }
     
-    self.addVehicle = function(vehicle, pos) {
-        if ( self.has == self.max ) { return false; }
+    function addVehicle(vehicle, pos) {
+        var self = this;
+        
+        if ( this.has == this.max ) { return false; }
         
         if ( !def(pos) ) {
             pos = 0;
-            for ( ;self.vehicles[pos] != undefined; pos++ );
+            for ( ;this.vehicles[pos] != undefined; pos++ );
         }
         
-        self.vehicles[pos] = vehicle;
-        self.has += 1;
+        this.vehicles[pos] = vehicle;
+        this.has += 1;
         
         vehicle._delete.slot = function() {
             self.removeVehicle(vehicle);
@@ -30,32 +30,32 @@ function SlotSet(data) {
         
         vehicle.addondelete(vehicle._delete.slot);
         
-        self.vehicles_dom[pos].appendChild(vehicle.getDom());
-        self.fetchString();
+        this.vehicles_dom[pos].appendChild(vehicle.getDom());
+        this.fetchString();
     }
     
-    self.removeVehicle = function(vehicle) {
-        var pos = self.vehicles.indexOf(vehicle);
+    function removeVehicle(vehicle) {
+        var pos = this.vehicles.indexOf(vehicle);
         if ( pos != -1 ) {
-            delete self.vehicles[pos];
-            self.has -= 1;
+            delete this.vehicles[pos];
+            this.has -= 1;
             
             vehicle.removeondelete(vehicle._delete.slot);
             
-            self.vehicles_dom[pos].textContent = '';
-            self.fetchString();
+            this.vehicles_dom[pos].textContent = '';
+            this.fetchString();
         }
     }
     
-    self.getPriorityFor = function(tag) {
-        if ( self.has == self.max ) { return -1; }
-        return self.tagqueue.indexOf(tag);
+    function getPriorityFor(tag) {
+        if ( this.has == this.max ) { return -1; }
+        return this.tagqueue.indexOf(tag);
     }
     
-    self.yieldState = function() {
-        console.log([locale.filled_with_vehicles[0],' ',self.has,'/',self.max,' ',locale.filled_with_vehicles[1],': {'].join(''));
-        for ( var i = 0; i < self.max; i++ ) {
-            var vehicle = self.vehicles[i];
+    function yieldState() {
+        console.log([locale.filled_with_vehicles[0],' ',this.has,'/',this.max,' ',locale.filled_with_vehicles[1],': {'].join(''));
+        for ( var i = 0; i < this.max; i++ ) {
+            var vehicle = this.vehicles[i];
             if ( vehicle == undefined ) {
                 console.log('\t---------');
             } else {
@@ -65,41 +65,60 @@ function SlotSet(data) {
         console.log('}');
     }
     
-    self.getSerializedList = function() {
-        return self.vehicles.join(',');
+    function getSerializedList() {
+        return this.vehicles.join(',');
     }
     
-    self.clear = function() {
-        for ( var i = 0; i < self.max; i++ ) {
-            var vehicle = self.vehicles[i];
+    function clear() {
+        for ( var i = 0; i < this.max; i++ ) {
+            var vehicle = this.vehicles[i];
             vehicle && vehicle.delete();
         }
-        self.vehicles = new Array(self.max);
-        self.has = 0;
+        this.vehicles = new Array(this.max);
+        this.has = 0;
     }
     
     
-    self._createDom = function() {
-        self.dom = cr('div','slot-set');
+    function _createDom() {
+        this.dom = cr('div','slot-set');
         
-        self.textlabel = cr('div','slot-name', self.dom);
-        self.fetchString();
+        this.textlabel = cr('div','slot-name', this.dom);
+        this.fetchString();
         
-        for ( var i = 0; i < self.max; i++ ) {
-            self.vehicles_dom[i] = cr('div', 'slot', self.dom);
+        for ( var i = 0; i < this.max; i++ ) {
+            this.vehicles_dom[i] = cr('div', 'slot', this.dom);
         }
         
-        return self.dom;
+        return this.dom;
     }
     
-    self.fetchString = function() {
-        self.textlabel.textContent = [self.name,' ',self.has,'/',self.max].join('');
+    function fetchString() {
+        this.textlabel.textContent = [this.name,' ',this.has,'/',this.max].join('');
     }
     
-    self.getDom = function() {
-        return self.dom;
+    function getDom() {
+        return this.dom;
     }
     
-    self.init();
-}
+    return function(data) {
+        var self = getSelf(this);
+        self.inherit(BaseModel);
+        
+        self.init = init;
+        self.addVehicle = addVehicle;
+        self.removeVehicle = removeVehicle;
+        self.getPriorityFor = getPriorityFor;
+        self.yieldState = yieldState;
+        self.getSerializedList = getSerializedList;
+        self.clear = clear;
+        self._createDom = _createDom;
+        self.fetchString = fetchString;
+        self.getDom = getDom;
+        
+        self.init(data);
+    }
+    
+})();
+
+
 
