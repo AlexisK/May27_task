@@ -58,6 +58,7 @@ var Parking = (function(){
         
         place.addVehicle(vehicle);
         this.saveState();
+        return true;
     }
     
     function clear(index) {

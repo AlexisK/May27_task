@@ -40,7 +40,7 @@ var Vehicle = (function() {
     }
     
     function copy() {
-        return new Vehicle(taglist.slice()).init();
+        return new Vehicle(this.taglist.slice()).init();
     }
     
     function _saveRepresintation() {
