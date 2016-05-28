@@ -8,5 +8,5 @@ window.locale = {
     
     state_parking_group: ["State for","parking group"],
     filled_with_vehicles: ["Currently filled with","vehicles"],
-    fixture_fill_need: ["Failed to run continious autofill - need limit of","at least"],
+    fixture_fill_need: ["Failed to run continious autofill - due to current settings need limit of","at least"],
 }
