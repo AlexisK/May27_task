@@ -33,6 +33,8 @@ gulp.task('build_js', function(done) {
     .pipe(uglify())
     .pipe(gulp.dest('./build'));
     
+    gulp.src('./resources/locale/*').pipe(gulp.dest('./build/locale'));
+    
     done();
 });
 

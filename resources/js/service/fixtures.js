@@ -14,7 +14,7 @@ function fixtureContiniousFillScenario(limit, tag_keys) {
     // algorythm always trying to fit in its 'ideal' state - targetQuantity, so it will add or remove corresponding amout of vehicles
     limit = limit || 1;
     var targetQuantity = limit - config.fixtureFill.random;
-    if ( targetQuantity <= 0 ) { console.log('Failed to run continious autofill - need limit of '+(config.fixtureFill.random+1)+' at least'); return 0; }
+    if ( targetQuantity <= 0 ) { console.log([locale.fixture_fill_need[0], (config.fixtureFill.random+1), locale.fixture_fill_need[1]].join(' ')); return 0; }
     parking.clear();
     var quantity = 0;
     

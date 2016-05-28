@@ -55,7 +55,7 @@ function Parking(name) {
     self.register = function(vehicle) {
         var place = self._getSlotByVehicle(vehicle);
         if ( !place ) {
-            console.log('No place for ',vehicle);
+            console.log(locale.no_place_for,vehicle);
             return false;
         }
         
@@ -87,7 +87,7 @@ function Parking(name) {
             var vehicles = data[k].split(',');
             for ( var i = 0; i < vehicles.length; i++ ) {
                 var vehicle = VEHICLE[vehicles[i]];
-                if ( vehicle ) {
+                if ( vehicle && self.slot_by_type[k] ) {
                     self.slot_by_type[k].addVehicle(vehicle, i);
                 }
             }
@@ -97,7 +97,7 @@ function Parking(name) {
     
     self.yieldState = function() {
         for ( k in self.slot_by_type ) {
-            console.log(['\nState for ',k,' parking group'].join(''));
+            console.log(['\n',locale.state_parking_group[0],' ',k,' ',locale.state_parking_group[1]].join(''));
             self.slot_by_type[k].yieldState();
         }
     }

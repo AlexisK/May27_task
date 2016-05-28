@@ -1,0 +1,12 @@
+
+window.locale = {
+    parking_truck    : "Trucks",
+    parking_disabled : "Disabled",
+    parking_simple   : "Simple",
+    
+    no_place_for: "No place for",
+    
+    state_parking_group: ["State for","parking group"],
+    filled_with_vehicles: ["Currently filled with","vehicles"],
+    fixture_fill_need: ["Failed to run continious autofill - need limit of","at least"],
+}

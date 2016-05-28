@@ -1,10 +1,12 @@
 
 window.config = {
+    locale: "en-US",
     version: {
         db: 1
     },
     fixtureFill: {
         random: 5,
         interval: 150
-    }
+    },
+    vehicle_id_prefix: "VH",
 }

@@ -23,7 +23,7 @@ function Vehicle(taglist) {// id is optional, used to restore vehicles
     
     self.init = function(id) {
         
-        self.id = id || 'VH-'+carIter.get();
+        self.id = id || [config.vehicle_id_prefix,carIter.get()].join('-');
         self.taglist = self._normalizeTags(taglist);
         VEHICLE[self.id] = self;
         self.saveState();

@@ -53,7 +53,7 @@ function SlotSet(data) {
     }
     
     self.yieldState = function() {
-        console.log(['Currently filled with ',self.has,'/',self.max,' vehicles: {'].join(''));
+        console.log([locale.filled_with_vehicles[0],' ',self.has,'/',self.max,' ',locale.filled_with_vehicles[1],': {'].join(''));
         for ( var i = 0; i < self.max; i++ ) {
             var vehicle = self.vehicles[i];
             if ( vehicle == undefined ) {

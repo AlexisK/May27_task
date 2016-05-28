@@ -3,7 +3,7 @@ function declareInstances() {
     
     'Truck,Sedan,Disabled'.split(',').map(function(name) {
         new Tag(name);
-    });
+    });// No need to keep tags in storage - faster to recreate
     
     window.parking = new Parking('main');
     
@@ -23,7 +23,7 @@ function mainScenario() {
     window.loadState();// only data, no model instances here
     declareInstances();
     Vehicle.loadState();
-    Parking.loadState();
+    Parking.loadState();// here we could use parking.loadState() - direct on instance, but I use model method to keep syntax straight
     
     parking.yieldState();
     
@@ -33,5 +33,7 @@ function mainScenario() {
 
 
 // Start
-loadJson('config.json', mainScenario);
+loadJson('config.json', function() {
+    loadJson(['locale/',config.locale,'.json'].join(''), mainScenario);
+});
 
